@@ -163,7 +163,7 @@ def sub_new():
         cursor = db.db.cursor(named_tuple=True)
         try:
             cursor.execute(
-                "INSERT INTO `requests` (`date`,`id_login`, `id_book`,  `id_status `) VALUES ('%s','%s','%s','%s')" % (
+                "INSERT INTO `requests` (`date`,`id_login`, `id_book`,  `id_status`) VALUES ('%s','%s','%s','%s')" % (
                     date, user_id, book_id, id_status))
             db.db.commit()
             cursor.close()
