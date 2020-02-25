@@ -112,17 +112,16 @@ def logout():
                            login_false=False)
 
 
-@app.route('/req', methods=['GET'])
+@app.route('/reqj', methods=['GET'])
 @login_required
 def req():
-    requests = db.select(None, "requests")
-    date = db.select("date", "requests")
-    login = dict(db.select(["id", "login"], "users"))
     roles_id = flask_login.current_user.roles_id
-    support = dict(db.select(["id", "title"], "support"))
-    status = dict(db.select(["id", "title"], "statuss"))
-    return render_template("req.html", requests=requests, date=date, login=login, support=support, status=status,
-                           authorization=not flask_login.current_user.is_anonymous, roles_id=roles_id,
+    reqs = db.select(None, "requests")
+    logins = dict(db.select(["id","login"], "users"))
+    books = dict(db.select(["id","title"], "books"))
+    statuss = dict(db.select(["id","title"], "statuss"))
+    return render_template("req.html", reqs=reqs,logins = logins,books = books,statuss = statuss
+                           , roles_id=roles_id,
                            login_user=flask_login.current_user.login)
 
 
@@ -148,7 +147,8 @@ def sub_new():
         cursor = db.db.cursor(named_tuple=True)
         try:
             cursor.execute(
-                "INSERT INTO `requests` (`date`,`id_login`, `id_book`,  `id_status `) VALUES ('%s','%s','%s','%s')" % (date,user_id,book_id,id_status))
+                "INSERT INTO `requests` (`date`,`id_login`, `id_book`,  `id_status `) VALUES ('%s','%s','%s','%s')" % (
+                date, user_id, book_id, id_status))
             db.db.commit()
             cursor.close()
             return redirect("/")
@@ -167,8 +167,8 @@ def req_edit():
         author = request.form.get("author")
         date = request.form.get("date")
         statuss = db.select(None, "status")
-        return render_template("req_edit.html", book_title=book_title, book_id=book_id,date = date,
-                               author = author,
+        return render_template("req_edit.html", book_title=book_title, book_id=book_id, date=date,
+                               author=author,
                                statuss=statuss,
                                authorization=True, login_user=flask_login.current_user.login)
     except Exception:
@@ -182,11 +182,11 @@ def req_edit_submit():
     author = request.form.get("author")
     date = request.form.get("date")
     book_id = request.form.get("book_id")
-    if date and author  and book_id:
+    if date and author and book_id:
         cursor = db.db.cursor(named_tuple=True)
         cursor.execute(
             "UPDATE `books` SET  `year` = '%s',  `title` = '%s',`author` = '%s' WHERE `books`.`id` = '%s'" % (
                 date, book_title, author, book_id))
         db.db.commit()
         cursor.close()
-        return  redirect("/")
+        return redirect("/")
