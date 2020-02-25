@@ -43,7 +43,7 @@ def take():
     book_id = request.form.get("id")
     user_id = request.form.get("user_id")
     book_title = request.form.get("book_title")
-    statuss = db.select(None, "status")
+    statuss = db.select(None, "statuss")
     return render_template("add_book.html", book_title=book_title, book_id=book_id, user_id=user_id, statuss=statuss,
                            authorization=True, login_user=flask_login.current_user.login)
 
@@ -120,7 +120,7 @@ def req():
     login = dict(db.select(["id", "login"], "users"))
     roles_id = flask_login.current_user.roles_id
     support = dict(db.select(["id", "title"], "support"))
-    status = dict(db.select(["id", "title"], "status"))
+    status = dict(db.select(["id", "title"], "statuss"))
     return render_template("req.html", requests=requests, date=date, login=login, support=support, status=status,
                            authorization=not flask_login.current_user.is_anonymous, roles_id=roles_id,
                            login_user=flask_login.current_user.login)
@@ -153,8 +153,6 @@ def sub_new():
             cursor.close()
             return redirect("/")
         except Exception:
-            support = db.select(["id", "title"], "support")
-            status = db.select(["id", "title"], "status")
             return redirect("/")
     else:
         return redirect("/")

@@ -16,7 +16,7 @@
                 <label for="id_status">Статус обращения</label>
                 <select name = "id_status">
                     {% for stat in statuss%}
-                     <option value={{ stat.id }}>{{ stat.status }}</option>
+                     <option value={{ stat.id }}>{{ stat.title }}</option>
                      {% endfor %}
                 </select>
             </div>
