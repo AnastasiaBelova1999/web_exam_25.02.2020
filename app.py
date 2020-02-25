@@ -202,4 +202,5 @@ def req_edit_submit():
                 date, book_title, author, book_id))
         db.db.commit()
         cursor.close()
+
     return redirect("/")
