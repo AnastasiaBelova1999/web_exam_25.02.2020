@@ -73,7 +73,7 @@ def hello_world():
         books = db.select(None, "books")
         return render_template("index.html", authorization=not flask_login.current_user.is_anonymous,
                                login_user=login_user, books=books, roles_id=roles_id,
-                               user_id=flask_login.current_user.user_id)
+                               user_id= user_id)
     elif request.method == 'POST':
         username = request.form.get("username")
         password = request.form.get("password")
