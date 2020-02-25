@@ -22,7 +22,7 @@
       <td>{{ req.title}}</td>
       <td>{{ req.author}}</td>
       <td>{{ req.year}}</td>
-      <td>{{ req.count}}</td>
+      <td>{{ req.number}}</td>
       {% if authorization %}
            <td><form action="/req/take" method="POST">
                         <input type = "hidden" name="id" value="{{ req.id }}">
@@ -35,7 +35,6 @@
        <td>
            <form action="/req/delete" method="POST">
                         <input type = "hidden" name="id" value="{{ req.id }}">
-                        <input type = "hidden" name="id" value="{{ req.id }}">
 						<button type="hidden" class="btn btn-primary">delete</button>
             </form>
        </td>
@@ -43,6 +42,9 @@
       {% if roles_id in [1,2]%}
         <td><form action="/req/edit" method="POST">
                         <input type = "hidden" name="id" value="{{ req.id }}">
+                      <input type = "hidden" name="book_title" value="{{ req.title }}">
+                    <input type = "hidden" name="author" value="{{ req.author }}">
+                        <input type = "hidden" name="date" value="{{ req.year }}">
 						<button type="hidden" class="btn btn-primary">edit</button>
   </form></td>
        {% endif %}

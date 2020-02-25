@@ -21,13 +21,13 @@ class User(flask_login.UserMixin):
 @login_manager.user_loader
 def user_loader(login):
     cursor = db.db.cursor(named_tuple=True)
-    cursor.execute('select id, login, role_id from users where id = %s', (login,))
+    cursor.execute('select id, login, roles_id from users where id = %s', (login,))
     user_db = cursor.fetchone()
     if user_db:
         user = User()
         user.id = user_db.id
         user.login = user_db.login
-        user.roles_id = user_db.role_id
+        user.roles_id = user_db.roles_id
         return user
     return None
 
@@ -80,7 +80,7 @@ def hello_world():
             cursor = db.db.cursor(named_tuple=True, buffered=True)
             try:
                 cursor.execute(
-                    "SELECT id,login,role_id FROM users WHERE `login` = '%s' and `password_hash` = '%s'" % (
+                    "SELECT id,login,roles_id FROM users WHERE `login` = '%s' and `password_hash` = '%s'" % (
                         username, password_hash))
                 user = cursor.fetchone()
             except Exception:
@@ -93,7 +93,7 @@ def hello_world():
                 flask_user.id = user.id
                 flask_user.login = user.login
                 flask_login.login_user(flask_user, remember=True)
-                flask_user.roles_id = user.role_id
+                flask_user.roles_id = user.roles_id
                 return redirect("/")
             else:
                 flash("Не правильный логин или пароль")
@@ -148,65 +148,47 @@ def sub_new():
         cursor = db.db.cursor(named_tuple=True)
         try:
             cursor.execute(
-                "INSERT INTO `journal` (`date`,`user_id`, `book_id`,  `status_id`) VALUES ('%s','%s','%s','%s')" % (date,user_id,book_id,id_status))
+                "INSERT INTO `requests` (`date`,`id_login`, `id_book`,  `id_status `) VALUES ('%s','%s','%s','%s')" % (date,user_id,book_id,id_status))
             db.db.commit()
             cursor.close()
             return redirect("/")
         except Exception:
             support = db.select(["id", "title"], "support")
             status = db.select(["id", "title"], "status")
-            return render_template("new.html", login=flask_login.current_user.login, insert_false=True,
-                                   support=support,
-                                   status=status, authorization=not flask_login.current_user.is_anonymous)
+            return redirect("/")
     else:
-        support = db.select(["id", "title"], "support")
-        status = db.select(["id", "title"], "status")
-        return render_template("new.html", login=flask_login.current_user.login, insert_false=True, support=support,
-                               status=status, authorization=not flask_login.current_user.is_anonymous)
+        return redirect("/")
 
 
 @app.route('/req/edit', methods=['POST'])
 @login_required
 def req_edit():
     try:
-        request_id = request.form.get("id")
+        book_id = request.form.get("id")
+        book_title = request.form.get("book_title")
+        author = request.form.get("author")
         date = request.form.get("date")
-        support_id = request.form.get("id_support")
-        status_id = request.form.get("id_status")
-        statuss = db.select(["id", "title"], "status")
-        supports = dict(db.select(["id", "title"], "support"))
-
-        sub = {
-            'request_id': int(request_id),
-            'date': date,
-            'support_id': int(support_id),
-            'status_id': int(status_id),
-        }
-        return render_template("req_edit.html", sub=sub, supports=supports, statuss=statuss,
-                               login=flask_login.current_user.login, request_id=request_id)
-
+        statuss = db.select(None, "status")
+        return render_template("req_edit.html", book_title=book_title, book_id=book_id,date = date,
+                               author = author,
+                               statuss=statuss,
+                               authorization=True, login_user=flask_login.current_user.login)
     except Exception:
-        return redirect(url_for("req"))
+        return redirect("/")
 
 
 @app.route('/req/edit/submit', methods=['POST'])
 @login_required
 def req_edit_submit():
-    request_id = request.form.get("request_id")
+    book_title = request.form.get("book_title")
+    author = request.form.get("author")
     date = request.form.get("date")
-    support_id = request.form.get("id_support")
-    status_id = request.form.get("id_status")
-
-    if date and support_id and status_id:
+    book_id = request.form.get("book_id")
+    if date and author  and book_id:
         cursor = db.db.cursor(named_tuple=True)
-        try:
-            cursor.execute(
-                "UPDATE `requests` SET  `date` = '%s',  `id_support` = '%s',`id_status` = '%s' WHERE `requests`.`id` = '%s'" % (
-                    date, support_id, status_id, request_id))
-            db.db.commit()
-            cursor.close()
-            return redirect("/req")
-        except Exception:
-            return redirect("/req")
-    else:
-        return redirect("/req")
+        cursor.execute(
+            "UPDATE `books` SET  `year` = '%s',  `title` = '%s',`author` = '%s' WHERE `books`.`id` = '%s'" % (
+                date, book_title, author, book_id))
+        db.db.commit()
+        cursor.close()
+        return  redirect("/")

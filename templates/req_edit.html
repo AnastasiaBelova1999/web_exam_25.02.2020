@@ -1,40 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="content text-center">
-        <h4 class="text-center">Add edit</h4>
-         <div class="col-md-4 my-4 border border-white rounded container text-center" id="main">
+<div class="col-md-4 my-4 border border-white rounded container text-center" id="main">
 
     <div class="container text-center">
-        <div class="container text-center">
         <form class='form' method="post" action="/req/edit/submit">
+
             <div class="form-group">
+                 <label for="title">Название</label>
+                <input type="text" class="form-control" id="title" placeholder="book_title" name="book_title" value="{{ book_title }}">
+                <p></p>
                 <label for="date">Дата</label>
-                <input type="date" class="form-control" id="date" placeholder="date" name="date" value="{{ sub["date"] }}">
+                <input type="number" class="form-control" id="date" placeholder="date" name="date" value="{{ date }}">
+                <label for="author">Автор</label>
+                <input type="text" class="form-control" id="author" placeholder="author" name="author" value="{{ author }}">
             </div>
 
-            <div class="form-group">
-                <label for="id_clothes">Состояние</label>
-                <input type="text" class="form-control" id="id_support" placeholder="{{supports[sub["support_id"]] }}" name="id_support_fake"  readonly>
-                <input type="hidden" class="form-control" id="id_support"  name="id_support" value="{{sub["support_id"]}}" readonly>
-            </div>
 
-            <div class="form-group">
-                <label for="id_status">Статус обращения</label>
-                <select name = "id_status">
-                 {% for status in statuss %}
-                         <option {% if status.id == sub["status_id"] %}
-                         selected
-                         {% endif %} value={{ status.id }}>{{ status.title }}</option>
-                 {% endfor %}
-                </select>
-            </div>
-
-            <input type="hidden" value="{{ sub["request_id"]}}" name = "request_id">
-            <input type=submit class='btn btn-success' value='Изменить'>
+            <input type="hidden" value="{{ book_id }}" name = "book_id">
+             <input type=submit class='btn btn-success' value='Изменить'>
         </form>
     </div>
-    </div>
-         <thead>
+</div>
+<thead>
 <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" id ="error_insert">
   <div class="toast-header">
     <strong class="mr-auto">ADMIN</strong>
@@ -47,9 +34,6 @@
     Что то не так проверьте данные или попробуйте позже
   </div>
 </div>
-         </thead>
-         </div>
-    </div>
 </body>
 {% if insert_false %}
 <script>
