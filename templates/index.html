@@ -25,15 +25,20 @@
       <td>{{ req.count}}</td>
       {% if authorization %}
            <td><form action="/req/take" method="POST">
+                        <input type = "hidden" name="id" value="{{ req.id }}">
+                         <input type = "hidden" name="book_title" value="{{ req.title }}">
+                         <input type = "hidden" name="user_id" value="{{ user_id }}">
 						<button type="hidden" class="btn btn-primary">to take</button>
       {% endif %}
       {% if roles_id in [1]%}
        <td><form action="/req/delete" method="POST">
+                        <input type = "hidden" name="id" value="{{ req.id }}">
 						<button type="hidden" class="btn btn-primary">delete</button>
   </form></td>
       {% endif %}
       {% if roles_id in [1,2]%}
         <td><form action="/req/edit" method="POST">
+                        <input type = "hidden" name="id" value="{{ req.id }}">
 						<button type="hidden" class="btn btn-primary">edit</button>
   </form></td>
        {% endif %}
