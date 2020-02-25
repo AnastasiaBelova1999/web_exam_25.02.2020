@@ -9,10 +9,11 @@ import hashlib
 app = Flask(__name__)
 app.secret_key = 'asjdfbajSLDFBhjasbfd'
 app.config.from_pyfile('config.py')
+app
 db = MySQL(app)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-
+application = app
 
 class User(flask_login.UserMixin):
     pass
