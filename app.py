@@ -117,12 +117,25 @@ def logout():
 def req():
     roles_id = flask_login.current_user.roles_id
     reqs = db.select(None, "requests")
-    logins = dict(db.select(["id","login"], "users"))
-    books = dict(db.select(["id","title"], "books"))
-    statuss = dict(db.select(["id","title"], "statuss"))
-    return render_template("req.html", reqs=reqs,logins = logins,books = books,statuss = statuss
+    logins = dict(db.select(["id", "login"], "users"))
+    books = dict(db.select(["id", "title"], "books"))
+    statuss = dict(db.select(["id", "title"], "statuss"))
+    return render_template("req.html", reqs=reqs, logins=logins, books=books, statuss=statuss
                            , roles_id=roles_id,
-                           login_user=flask_login.current_user.login)
+                           login_user=flask_login.current_user.login, authorization=True)
+
+
+@app.route('/reqj/edit', methods=['GET'])
+@login_required
+def req():
+    roles_id = flask_login.current_user.roles_id
+    reqs = db.select(None, "requests")
+    logins = dict(db.select(["id", "login"], "users"))
+    books = dict(db.select(["id", "title"], "books"))
+    statuss = dict(db.select(["id", "title"], "statuss"))
+    return render_template("req.html", reqs=reqs, logins=logins, books=books, statuss=statuss
+                           , roles_id=roles_id,
+                           login_user=flask_login.current_user.login, authorization=True)
 
 
 @app.route('/req/delete', methods=['POST'])
@@ -148,7 +161,7 @@ def sub_new():
         try:
             cursor.execute(
                 "INSERT INTO `requests` (`date`,`id_login`, `id_book`,  `id_status `) VALUES ('%s','%s','%s','%s')" % (
-                date, user_id, book_id, id_status))
+                    date, user_id, book_id, id_status))
             db.db.commit()
             cursor.close()
             return redirect("/")
