@@ -140,6 +140,7 @@ def reqs():
 @app.route('/req/delete', methods=['POST'])
 @login_required
 def book():
+
     id = request.form.get("id")
     cursor = db.db.cursor()
     cursor.execute("DELETE FROM `books` WHERE `books`.`id` = '%s'" % id)
