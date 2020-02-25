@@ -185,7 +185,6 @@ def req_edit():
                                statuss=statuss,
                                authorization=True, login_user=flask_login.current_user.login)
     except Exception:
-
         return redirect("/")
 
 
