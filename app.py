@@ -131,10 +131,10 @@ def req():
 def book():
     id = request.form.get("id")
     cursor = db.db.cursor()
-    cursor.execute("DELETE FROM `requests` WHERE `requests`.`id` = '%s'" % id)
+    cursor.execute("DELETE FROM `books` WHERE `books`.`id` = '%s'" % id)
     db.db.commit()
     cursor.close()
-    return redirect("/req")
+    return redirect("/")
 
 
 @app.route('/req/new', methods=['POST', 'GET'])
