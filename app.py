@@ -119,20 +119,20 @@ def req():
     logins = dict(db.select(["id", "login"], "users"))
     books = dict(db.select(["id", "title"], "books"))
     statuss = dict(db.select(["id", "title"], "statuss"))
-    return render_template("req.html", reqs=reqs, logins=logins, books=books, statuss=statuss
+    return render_template("reqj.html", reqs=reqs, logins=logins, books=books, statuss=statuss
                            , roles_id=roles_id,
                            login_user=flask_login.current_user.login, authorization=True)
 
 
 @app.route('/reqj/edit', methods=['GET'])
 @login_required
-def req():
+def reqs():
     roles_id = flask_login.current_user.roles_id
     reqs = db.select(None, "requests")
     logins = dict(db.select(["id", "login"], "users"))
     books = dict(db.select(["id", "title"], "books"))
     statuss = dict(db.select(["id", "title"], "statuss"))
-    return render_template("req.html", reqs=reqs, logins=logins, books=books, statuss=statuss
+    return render_template("reqj.html", reqs=reqs, logins=logins, books=books, statuss=statuss
                            , roles_id=roles_id,
                            login_user=flask_login.current_user.login, authorization=True)
 
